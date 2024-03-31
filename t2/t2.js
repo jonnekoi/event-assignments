@@ -771,32 +771,33 @@ const restaurants = [
 ];
 
 // your code here
-
-restaurants.sort((a, b) =>
-  a.name.toLowerCase().trim().localeCompare(b.name.toLowerCase().trim())
-);
+restaurants.sort((a, b) => {
+  const nameA = a.name.toLowerCase().trim();
+  const nameB = b.name.toLowerCase().trim();
+  return nameA.localeCompare(nameB);
+});
 
 const table = document.querySelector('table');
 const dialogNode = document.querySelector('dialog');
 
-restaurants.forEach(restaurant => {
+restaurants.forEach(({name, address, postalCode, city, company, phone}) => {
   const tr = document.createElement('tr');
-  tr.innerHTML = `<td>${restaurant.name}</td><td>${restaurant.address}</td>`;
+  tr.innerHTML = `<td>${name}</td><td>${address}</td>`;
 
   table.appendChild(tr);
+
   tr.addEventListener('click', () => {
-    document.querySelectorAll('tr').forEach(tr => {
-      tr.classList.remove('highlight');
+    document.querySelectorAll('tr.highlight').forEach(highlighted => {
+      highlighted.classList.remove('highlight');
     });
     tr.classList.toggle('highlight');
-    const phone = restaurant.phone !== '-' ? restaurant.phone : '';
     dialogNode.innerHTML = `
-    <h1>${restaurant.name}</h1>
-    <p>${restaurant.address}, ${restaurant.postalCode}, ${restaurant.city}</p>
-    <p>${restaurant.company} ${phone}</p>
-    <form method="dialog">
-    <button>Sulje</button>
-    </form>
+      <h1>${name}</h1>
+      <p>${address}, ${postalCode}, ${city}</p>
+      <p>${company} ${phone !== '-' ? phone : ''}</p>
+      <form method="dialog">
+        <button type="button" onclick="dialogNode.close()">Sulje</button>
+      </form>
     `;
     dialogNode.showModal();
   });
